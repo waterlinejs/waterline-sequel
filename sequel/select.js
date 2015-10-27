@@ -154,7 +154,7 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
         if(self.cast) {
           sum = 'CAST(' + sum + ' AS float)';
         }
-        query += sum + ' AS ' + opt + ', ';
+        query += sum + ' AS ' + utils.escapeName(opt, self.escapeCharacter) + ', ';
       });
 
     } else {
@@ -162,7 +162,7 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
       if(self.cast) {
         sum = 'CAST(' + sum + ' AS float)';
       }
-      query += sum + ' AS ' + criteria.sum + ', ';
+      query += sum + ' AS ' + utils.escapeName(criteria.sum, self.escapeCharacter) + ', ';
     }
   }
 
@@ -175,14 +175,14 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
         if(self.cast) {
           avg = 'CAST( ' + avg + ' AS float)';
         }
-        query +=  avg + ' AS ' + opt + ', ';
+        query +=  avg + ' AS ' + utils.escapeName(opt, self.escapeCharacter) + ', ';
       });
     } else {
       avg = 'AVG(' + tableName + '.' + utils.escapeName(criteria.average, self.escapeCharacter) + ')';
       if(self.cast) {
         avg = 'CAST( ' + avg + ' AS float)';
       }
-      query += avg + ' AS ' + criteria.average + ', ';
+      query += avg + ' AS ' + utils.escapeName(criteria.average, self.escapeCharacter) + ', ';
     }
   }
 
@@ -191,11 +191,11 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
     var max = '';
     if(Array.isArray(criteria.max)) {
       criteria.max.forEach(function(opt){
-        query += 'MAX(' + tableName + '.' + utils.escapeName(opt, self.escapeCharacter) + ') AS ' + opt + ', ';
+        query += 'MAX(' + tableName + '.' + utils.escapeName(opt, self.escapeCharacter) + ') AS ' + utils.escapeName(opt, self.escapeCharacter) + ', ';
       });
 
     } else {
-      query += 'MAX(' + tableName + '.' + utils.escapeName(criteria.max, self.escapeCharacter) + ') AS ' + criteria.max + ', ';
+      query += 'MAX(' + tableName + '.' + utils.escapeName(criteria.max, self.escapeCharacter) + ') AS ' + utils.escapeName(criteria.max, self.escapeCharacter) + ', ';
     }
   }
 
@@ -203,11 +203,11 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
   if (criteria.min) {
     if(Array.isArray(criteria.min)) {
       criteria.min.forEach(function(opt){
-        query += 'MIN(' + tableName + '.' + utils.escapeName(opt, self.escapeCharacter) + ') AS ' + opt + ', ';
+        query += 'MIN(' + tableName + '.' + utils.escapeName(opt, self.escapeCharacter) + ') AS ' + utils.escapeName(opt, self.escapeCharacter) + ', ';
       });
 
     } else {
-      query += 'MIN(' + tableName + '.' + utils.escapeName(criteria.min, self.escapeCharacter) + ') AS ' + criteria.min + ', ';
+      query += 'MIN(' + tableName + '.' + utils.escapeName(criteria.min, self.escapeCharacter) + ') AS ' + utils.escapeName(criteria.min, self.escapeCharacter) + ', ';
     }
   }
 
@@ -215,6 +215,6 @@ SelectBuilder.prototype.processAggregates = function processAggregates(criteria)
   query = query.slice(0, -2) + ' ';
 
   // Add FROM clause
-  query += 'FROM ' + utils.escapeName(self.schema[self.currentTable].tableName, self.escapeCharacter) + ' AS ' + tableName + ' ';
+  query += 'FROM ' + utils.escapeName(self.schema[self.currentTable].tableName, self.escapeCharacter) + ' AS ' + utils.escapeName(tableName, self.escapeCharacter) + ' ';
   return query;
 };
